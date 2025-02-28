@@ -16,7 +16,6 @@ module Input
     if(!check_position_in_bounds(row, column))
       prompt(player)
     else
-      binding.pry
       return position
     end
   end
@@ -60,7 +59,37 @@ include Input
       elsif current_player == 'O'
         current_player = 'X'
       end
+      result = continue_game?(Board.returnBoard)
+      if(result == 'X')
+        puts 'Player 1 has won!'
+        break
+      elsif(result == 'O')
+        puts 'Player 2 has won!'
+        break
+      end
     end
+  end
+
+  def continue_game?(board)
+    down_slash_row = [board[0][0], board[1][1], board[2][2]]
+    up_slash_row = [board[2][0], board[1][1], board[0][2]]
+    left_column = [board[0][0], board[1][0], board[2][0]]
+    middle_column = [board[0][1], board[1][1], board[2][1]]
+    right_column = [board[0][2], board[1][2], board[2][2]]
+    first_row = [board[0][0], board[0][1], board[0][2]]
+    second_row = [board[1][0], board[1][1], board[1][2]]
+    third_row = [board[2][0], board[2][1], board[2][2]]
+
+    winning_rows = [first_row, second_row, third_row, down_slash_row, up_slash_row, left_column, middle_column, right_column]
+    winning_rows.each do |element|
+      if(element.all? { |element| element == 'X'})
+        return 'X'
+      end
+      if(element.all? { |element| element == 'O'})
+        return 'O'
+      end
+    end
+    return false
   end
 
 end
