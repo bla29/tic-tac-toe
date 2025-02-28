@@ -1,27 +1,35 @@
 require_relative 'Board'
 require 'pry-byebug'
+$VALID_INPUT = ['0', '1', '2']
 
 module Input
   def prompt(player)
     if player == 'X'
       puts "Player 1. Pick your position: Position is defined as 'row, column'. Example is '0, 2'."
       position = gets.chomp
+      position = position.split(',')
+      #binding.pry
     elsif player == 'O'
       puts "Player 2. Pick your position: Position is defined as 'row, column'. Example is '0, 2'."
       position = gets.chomp
+      position = position.split(',')
     end
-    position = position_to_integer(position)
-    row = position[0]
-    column = position[1]
-    if(!check_position_in_bounds(row, column))
+    if(!position.all? { |element| $VALID_INPUT.include?(element)}) || position.empty?
+      puts 'Please enter a number that is in the valid range.'
       prompt(player)
     else
-      return position
+      position = position_to_integer(position)
+      row = position[0]
+      column = position[1]
+      if(!check_position_in_bounds(row, column))
+        prompt(player)
+      else
+        return position
+      end
     end
   end
 
   def position_to_integer(position)
-    position = position.split(',')
     position[0] = position[0].to_i
     position[1] = position[1].to_i
     return position
